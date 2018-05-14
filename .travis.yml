@@ -1,0 +1,11 @@
+env:
+    - BAZEL_VERSION='0.13.0'
+
+sudo: required
+
+before_install:
+    - ./bazel_travis_toolbox/before_install.sh
+
+script:
+    - yes | bazel run @androidsdk//install --direct_run # Install the Android SDK
+    - bazel build ...
