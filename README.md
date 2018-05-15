@@ -28,7 +28,7 @@ with this instead
 ```python
 git_repository(
     name = "android_sdk_downloader",
-    remote = "https://github.com/quittle/android_sdk_downloader",
+    remote = "https://github.com/quittle/bazel_android_sdk_downloader",
     commit = "<HEAD-COMMIT>",
 )
 
