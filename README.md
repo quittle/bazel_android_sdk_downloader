@@ -18,8 +18,8 @@ In your `WORKSPACE` file, replace the following block
 android_sdk_repository(
     name = "androidsdk",
     path = "../path/to/sdk",
-    api_level = 26,
-    build_tools_version = "26.0.3",
+    api_level = 27,
+    build_tools_version = "27.0.3",
 )
 ```
 
@@ -37,8 +37,8 @@ load("@android_sdk_downloader//:rules.bzl", "android_sdk_repository")
 android_sdk_repository(
     name = "androidsdk",
     workspace_name = "<YOUR-WORKSPACE-NAME>",
-    api_level = 26,
-    build_tools_version = "26.0.3",
+    api_level = 27,
+    build_tools_version = "27.0.3",
 )
 ```
 
@@ -47,7 +47,7 @@ android_sdk_repository(
 Then run
 
 ```bash
-bazel run @androidsdk//install --direct_run
+bazel run @androidsdk//install
 ```
 
 This will attempt to download the SDK for the versions specified. If you change these values, clean
@@ -69,11 +69,11 @@ licenses. The easiest way on unix-like systems is to pipe `yes` into the install
 your install or build step.
 
 ```bash
-yes | bazel run @androidsdk//install --direct_run
+yes | bazel run @androidsdk//install
 ```
 
 # Troubleshooting
-My build fails with this cryptic error
+#### My build fails with this cryptic error
 
 ```
 no such package '@android_sdk_repository_androidsdk//': /home/ubuntu/workspace/my_project/bazel-bin/external/androidsdk/install/sdk.runfiles/my_project/_ (No such file or directory) and referenced by '//external:android/sdk'
@@ -97,10 +97,21 @@ occurs when you updated the `build_tools_version` but for got to run `install` a
 happens when you updated the api_level but forgot run `install` again. Basically, try re-running the
 installation step before getting too concerned. There is no need to clean between changes.
 
+#### My build fails with `Skipping following packages as the license is not accepted`
+
+This will occur when running the install step but you are unable to actually type `y` to accept the
+licence. This occurs on Bazel versions prior to `0.14.0`. Prior to this, you must pass
+`--direct_run` as a Bazel flag when running the install command. e.g.
+
+```bash
+bazel run @androidsdk//install --direct_run
+```
+
 # Notes
 #### Why is the workspace_name a parameter of the rule?
 It is not too intrusive for now but would like to find a way to remove this requirement.
 
-#### Why do I need `--direct_run`
-By default Bazel doesn't read from stdin when invoking a rule so you need to pass this flag in order
-for it to listen for `y` to accept the licenses.
+#### Why do I need `--direct_run` with Bazel prior to 0.14.0
+Prior to this version, the default behavior of Bazel was to not `run` interactively so you needed to
+pass this flag in order for it to listen for `y` to accept the licenses. This flag no longer needed
+when running with Bazel 0.14.0 or later as this is now the default mode.

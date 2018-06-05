@@ -5,8 +5,8 @@ load(":rules.bzl", "android_sdk_repository")
 android_sdk_repository(
     name = "androidsdk",
     workspace_name = "android_sdk_downloader",
-    api_level = 26,
-    build_tools_version = "26.0.3",
+    api_level = 27,
+    build_tools_version = "27.0.3",
 )
 
 maven_jar(
